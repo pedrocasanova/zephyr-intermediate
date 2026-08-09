@@ -8,6 +8,7 @@ LOG_MODULE_REGISTER(demo, LOG_LEVEL_DBG);
 #define PRIO_LOW   7
 #define PRIO_MED   5
 #define PRIO_HIGH  3
+#define PRIO_COOP  -1
 
 void t_low_fn(void *p1, void *p2, void *p3)
 {
@@ -30,12 +31,23 @@ void t_high_fn(void *p1, void *p2, void *p3)
     }
 }
 
+void t_coop_fn(void *p1, void *p2, void *p3)
+{
+    uint8_t count = 0;
+    for (int i = 0; i < 5; i++) {
+        count++;
+    }
+    k_yield();
+}
+
 K_THREAD_DEFINE(t_low,  STACK_SIZE, t_low_fn,
                 NULL, NULL, NULL, PRIO_LOW, 0, 0);
 K_THREAD_DEFINE(t_med,  STACK_SIZE, t_med_fn,
                 NULL, NULL, NULL, PRIO_MED, 0, 0);
 K_THREAD_DEFINE(t_high, STACK_SIZE, t_high_fn,
                 NULL, NULL, NULL, PRIO_HIGH, 0, 0);
+K_THREAD_DEFINE(t_coop, STACK_SIZE, t_coop_fn,
+                NULL, NULL, NULL, PRIO_COOP, 0, 0);
 
 int main(void)
 {
