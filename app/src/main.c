@@ -12,9 +12,13 @@ LOG_MODULE_REGISTER(demo, LOG_LEVEL_DBG);
 
 static volatile uint16_t counter = 0u;
 
+static K_MUTEX_DEFINE(counter_mutex);
+
 void ctr_fn(void *p1, void *p2, void *p3)
 {
+    k_mutex_lock(&counter_mutex, K_FOREVER);
     counter++;
+    k_mutex_unlock(&counter_mutex);
     LOG_INF("Counter is %d", counter);
 }
 
