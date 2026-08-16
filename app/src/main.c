@@ -10,47 +10,24 @@ LOG_MODULE_REGISTER(demo, LOG_LEVEL_DBG);
 #define PRIO_HIGH  3
 #define PRIO_COOP  -1
 
-void t_low_fn(void *p1, void *p2, void *p3)
+static volatile uint16_t counter = 0u;
+
+void ctr_fn(void *p1, void *p2, void *p3)
 {
-    while (1) {
-        k_msleep(300);
-    }
+    counter++;
+    LOG_INF("Counter is %d", counter);
 }
 
-void t_med_fn(void *p1, void *p2, void *p3)
-{
-    while (1) {
-        k_msleep(200);
-    }
-}
-
-void t_high_fn(void *p1, void *p2, void *p3)
-{
-    while (1) {
-        k_msleep(100);
-    }
-}
-
-void t_coop_fn(void *p1, void *p2, void *p3)
-{
-    uint8_t count = 0;
-    for (int i = 0; i < 5; i++) {
-        count++;
-    }
-    k_yield();
-}
-
-K_THREAD_DEFINE(t_low,  STACK_SIZE, t_low_fn,
-                NULL, NULL, NULL, PRIO_LOW, 0, 0);
-K_THREAD_DEFINE(t_med,  STACK_SIZE, t_med_fn,
+K_THREAD_DEFINE(t1,  STACK_SIZE, ctr_fn,
                 NULL, NULL, NULL, PRIO_MED, 0, 0);
-K_THREAD_DEFINE(t_high, STACK_SIZE, t_high_fn,
-                NULL, NULL, NULL, PRIO_HIGH, 0, 0);
-K_THREAD_DEFINE(t_coop, STACK_SIZE, t_coop_fn,
-                NULL, NULL, NULL, PRIO_COOP, 0, 0);
+K_THREAD_DEFINE(t2,  STACK_SIZE, ctr_fn,
+                NULL, NULL, NULL, PRIO_MED, 0, 0);
 
 int main(void)
 {
+    while (1) {
+
+    };
+
     return 0;
 }
-
